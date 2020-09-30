@@ -1,0 +1,9 @@
+.github
+.git
+.idea
+venv
+build
+*.egg-info
+instance
+docker-compose.yml
+**/main.db
