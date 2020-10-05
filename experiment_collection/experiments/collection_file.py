@@ -40,10 +40,14 @@ class ExperimentCollectionLocal(ExperimentCollectionABC):
     def close(self):
         self.conn.close()
 
-    def add_experiment(self, exp: Experiment):
+    def add_experiment(self, exp: Experiment, /, ignore_included=False):
         data = exp.dumps()
-        with self.conn:
-            self.conn.execute(INSERT_STATEMENT, data)
+        try:
+            with self.conn:
+                self.conn.execute(INSERT_STATEMENT, data)
+        except sqlite3.IntegrityError as e:
+            if not ignore_included:
+                raise e
 
     def delete_experiment(self, exp: typing.Union[Experiment, str]):
         if isinstance(exp, Experiment):
