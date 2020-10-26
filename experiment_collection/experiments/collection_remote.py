@@ -27,12 +27,12 @@ class ExperimentCollectionRemote(ExperimentCollectionABC):
     def close(self):
         pass
 
-    def add_experiment(self, exp: Experiment):
+    def add_experiment(self, exp: Experiment, /, ignore_included=False):
         data = exp.dumps_json()
         data['collection_name'] = self.collection_name
         url = urllib.parse.urljoin(self.host, INSERT_URL)
         r = requests.post(url, data=data)
-        if not r.ok:
+        if not r.ok and not ignore_included and self.check_experiment(exp):
             raise ExperimentCollectionRemoteException(r.text)
 
     def delete_experiment(self, exp: typing.Union[Experiment, str]):

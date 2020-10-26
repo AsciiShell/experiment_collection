@@ -1,5 +1,4 @@
 import abc
-
 import typing
 
 from .experiment import Experiment
@@ -12,7 +11,7 @@ class ExperimentCollectionABC(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def add_experiment(self, exp: Experiment):
+    def add_experiment(self, exp: Experiment, /, ignore_included=False):
         pass
 
     @abc.abstractmethod
