@@ -27,7 +27,7 @@ class ExperimentCollectionRemote(ExperimentCollectionABC):
     def close(self):
         pass
 
-    def add_experiment(self, exp: Experiment, /, ignore_included=False):
+    def add_experiment(self, exp: Experiment, *, ignore_included=False):
         data = exp.dumps_json()
         data['collection_name'] = self.collection_name
         url = urllib.parse.urljoin(self.host, INSERT_URL)

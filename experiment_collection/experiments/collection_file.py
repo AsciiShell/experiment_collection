@@ -40,7 +40,7 @@ class ExperimentCollectionLocal(ExperimentCollectionABC):
     def close(self):
         self.conn.close()
 
-    def add_experiment(self, exp: Experiment, /, ignore_included=False):
+    def add_experiment(self, exp: Experiment, *, ignore_included=False):
         data = exp.dumps()
         try:
             with self.conn:

@@ -11,7 +11,7 @@ class ExperimentCollectionABC(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def add_experiment(self, exp: Experiment, /, ignore_included=False):
+    def add_experiment(self, exp: Experiment, *, ignore_included=False):
         pass
 
     @abc.abstractmethod
