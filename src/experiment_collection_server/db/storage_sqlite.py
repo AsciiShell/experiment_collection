@@ -58,6 +58,7 @@ VALUES (?, ?, datetime('now'), datetime('now', ?));"""
             self.conn.execute(sql, (namespace, name, '+{} seconds'.format(duration)))
         return True
 
+    # pylint: disable=R0913
     def create_experiment(self, namespace: str, name: str, params: str, metrics: str, time: datetime.datetime):
         sql = """INSERT INTO experiments (namespace, name, params, metrics, created_at)
 VALUES (?, ?, ?, ?, ?);"""

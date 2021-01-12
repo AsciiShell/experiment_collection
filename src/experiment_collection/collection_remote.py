@@ -30,6 +30,7 @@ class ExperimentCollectionRemote(ExperimentCollectionABC):
 
     def add_experiment(self, exp: Experiment, *, ignore_included=False):
         ts = Timestamp()
+        # pylint: disable=E1101
         ts.FromDatetime(exp.time)
         experiment = service_pb2.Experiment(name=exp.name,
                                             params=json.dumps(exp.params),
@@ -52,6 +53,8 @@ class ExperimentCollectionRemote(ExperimentCollectionABC):
         if isinstance(exp, Experiment):
             exp = exp.name
         r = self.stub.DeleteExperiment(service_pb2.SimpleExperiment(experiment=exp, **self.auth))
+        if not r.status:
+            raise ExperimentCollectionRemoteException(r.error)
 
     def check_experiment(self, exp: typing.Union[Experiment, str]) -> bool:
         if isinstance(exp, Experiment):
@@ -78,14 +81,21 @@ class ExperimentCollectionRemote(ExperimentCollectionABC):
         r = self.stub.CreateNamespace(service_pb2.SimpleNamespace(namespace=name, token=self.token))
         if r.status:
             return ExperimentCollectionRemote(self.host, name, self.token)
+        raise ExperimentCollectionRemoteException(r.error)
 
     def delete(self):
         r = self.stub.DeleteNamespace(service_pb2.SimpleNamespace(**self.auth))
+        if not r.status:
+            raise ExperimentCollectionRemoteException(r.error)
 
     def revoke(self, *, force=False):
         if force or input('enter YES to revoke access to all your namespaces') == 'YES':
             r = self.stub.RevokeToken(service_pb2.SimpleToken(token=self.token))
+            if not r.status:
+                raise ExperimentCollectionRemoteException(r.error)
         raise ExperimentCollectionRemoteException('abort')
 
     def grant(self, token: str):
         r = self.stub.GrantAccess(service_pb2.GrantAccessRequest(other_token=token, **self.auth))
+        if not r.status:
+            raise ExperimentCollectionRemoteException(r.error)

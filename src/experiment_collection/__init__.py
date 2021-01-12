@@ -1,4 +1,3 @@
-from .collection_abc import ExperimentCollectionABC
 from .collection_remote import ExperimentCollectionRemote
 from .experiment import Experiment
 

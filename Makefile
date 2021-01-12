@@ -23,7 +23,7 @@ docker: sdist_server
 	docker build -t $(PROJECT_NAME):$(VERSION) .
 
 pylint:
-	pylint --rcfile=setup.cfg src/
+	pylint --rcfile=setup.cfg  -j 0 src/
 
 flake8:
 	flake8 --config=setup.cfg src/

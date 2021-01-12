@@ -17,6 +17,7 @@ class Servicer(service_pb2_grpc.ExperimentServiceServicer):
     def __init__(self):
         self.db = StorageSQLite()
 
+    # pylint: disable=W0613
     def check_permission(self, request, context):
         return self.db.check_permission(request.token, request.namespace)
 
@@ -53,7 +54,9 @@ class Servicer(service_pb2_grpc.ExperimentServiceServicer):
         resp = service_pb2.ExperimentsReply(status=True)
         for exp in self.db.get_experiments(request.namespace):
             ts = Timestamp()
+            # pylint: disable=E1101
             ts.FromDatetime(datetime.datetime.strptime(exp[3], '%Y-%m-%d %H:%M:%S.%f'))
+            # pylint: disable=E1101
             resp.experiments.append(
                 service_pb2.Experiment(name=exp[0], time=ts, params=exp[1], metrics=exp[2]))
         return resp
