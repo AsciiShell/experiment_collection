@@ -1,12 +1,29 @@
-from setuptools import setup, find_packages
+from pkg_resources import parse_requirements
+from setuptools import setup
 
-from setup import __version__, NAME_SERVER, long_description, load_requirements
+
+def load_requirements(filename: str) -> list:
+    requirements = []
+    with open(filename, 'r') as f:
+        for requirement in parse_requirements(f.read()):
+            extras = '[{}]'.format(','.join(requirement.extras)) if requirement.extras else ''
+            requirements.append('{}{}{}'.format(requirement.name, extras, requirement.specifier))
+    return requirements
+
+
+def load_description(filename: str = 'README.md'):
+    with open(filename, 'rt') as f:
+        return f.read()
+
+
+__version__ = '0.2.0'
+NAME_SERVER = 'experiment_collection_server'
 
 setup(
     name=NAME_SERVER,
     version=__version__,
     description='Experiment collection',
-    long_description=long_description,
+    long_description=load_description(),
     long_description_content_type='text/markdown',
     url='https://github.com/AsciiShell/experiment_collection',
     author='AsciiShell (Aleksey Podchezertsev)',
@@ -23,8 +40,8 @@ setup(
         'Operating System :: POSIX :: Linux',
     ],
     keywords=['python3'],
-    package_dir={'': 'src_server'},
-    packages=find_packages(where='src_server', exclude=['tests', ]),
+    packages=['experiment_collection_core', 'experiment_collection_server', 'experiment_collection_server.db', ],
+    package_dir={'': 'src'},
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [
@@ -33,5 +50,5 @@ setup(
     },
     include_package_data=True,
     zip_safe=False,
-    install_requires=load_requirements('requirements.txt'),
+    install_requires=load_requirements('requirements_server.txt'),
 )

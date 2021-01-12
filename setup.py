@@ -1,26 +1,26 @@
-from pkg_resources import parse_requirements
+import os
+import subprocess
+
+import sys
 
 
-def load_requirements(filename: str) -> list:
-    requirements = []
-    with open(filename, 'r') as f:
-        for requirement in parse_requirements(f.read()):
-            extras = '[{}]'.format(','.join(requirement.extras)) if requirement.extras else ''
-            requirements.append(
-                '{}{}{}'.format(requirement.name, extras, requirement.specifier)
-            )
-    return requirements
+def call(*args, shell=False):
+    proc = subprocess.run(args, shell=shell, check=False)
+    if proc.returncode:
+        print('Error: ', *args)
 
 
-def load_description(filename: str = 'README.md'):
-    with open(filename, 'rt') as f:
-        return f.read()
+print('use setup_client.py or setup_server.py')
 
+setup_dir = os.path.dirname(os.path.abspath(__file__))
+setup_client = os.path.join(setup_dir, 'setup_client.py')
+setup_server = os.path.join(setup_dir, 'setup_server.py')
 
-__version__ = '0.2.0'
-NAME_CLIENT = 'experiment_collection'
-NAME_SERVER = 'experiment_collection_server'
-long_description = load_description()
-
-if __name__ == '__main__':
-    print('Use setup_client or setup_server')
+if os.path.exists(setup_client):
+    call_args = sys.argv.copy()
+    call_args[0] = setup_client
+    call('python3', *call_args)
+if os.path.exists(setup_server):
+    call_args = sys.argv.copy()
+    call_args[0] = setup_server
+    call('python3', *call_args)

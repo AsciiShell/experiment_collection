@@ -19,16 +19,10 @@ class Experiment:
     def set_metrics(self, metrics):
         self.metrics = prepare_dict(metrics)
 
-    def dumps(self):
-        p = json.dumps(self.params)
-        m = json.dumps(self.metrics)
-        t = self.time.isoformat()
-        return self.name, p, m, t
-
-    def dumps_json(self):
+    def dumps_dict(self):
         return {
             'name': self.name,
             'params': json.dumps(self.params),
             'metrics': json.dumps(self.metrics),
-            'time': self.time.isoformat()
+            'time': self.time,
         }

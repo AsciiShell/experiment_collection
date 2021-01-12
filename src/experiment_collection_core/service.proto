@@ -1,0 +1,61 @@
+syntax = "proto3";
+option java_package = "experiment_collection_core";
+
+import "google/protobuf/timestamp.proto";
+
+service ExperimentService {
+  rpc CreateExperiment (AddExperiment) returns (SimpleReply) {}
+  rpc ReserveExperiment (ReserveExperimentRequest) returns (SimpleReply) {}
+  rpc DeleteExperiment (SimpleExperiment) returns (SimpleReply) {}
+  rpc CheckExperiment (SimpleExperiment) returns (SimpleReply) {}
+  rpc GetExperiments (SimpleNamespace) returns (ExperimentsReply) {}
+
+  rpc CreateNamespace (SimpleNamespace) returns (SimpleReply) {}
+  rpc DeleteNamespace (SimpleNamespace) returns (SimpleReply) {}
+  rpc RevokeToken (SimpleToken) returns (SimpleReply) {}
+  rpc GrantAccess (GrantAccessRequest) returns (SimpleReply) {}
+}
+
+message Experiment {
+  string name = 1;
+  google.protobuf.Timestamp time = 2;
+  string params = 3;
+  string metrics = 4;
+}
+message SimpleExperiment {
+  string token = 1;
+  string namespace = 2;
+  string experiment = 3;
+}
+message SimpleNamespace {
+  string token = 1;
+  string namespace = 2;
+}
+message SimpleToken {
+  string token = 1;
+}
+message SimpleReply{
+  bool status = 1;
+  string error = 2;
+}
+message AddExperiment {
+  string token = 1;
+  string namespace = 2;
+  Experiment experiment = 3;
+}
+message ExperimentsReply{
+  bool status = 1;
+  string error = 2;
+  repeated Experiment experiments = 3;
+}
+message GrantAccessRequest {
+  string token = 1;
+  string namespace = 2;
+  string other_token = 3;
+}
+message ReserveExperimentRequest {
+  string token = 1;
+  string namespace = 2;
+  string experiment = 3;
+  uint32 duration = 4;
+}
