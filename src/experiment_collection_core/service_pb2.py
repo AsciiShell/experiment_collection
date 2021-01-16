@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\032experiment_collection_core',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n(experiment_collection_core/service.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"e\n\nExperiment\x12\x0c\n\x04name\x18\x01 \x01(\t\x12(\n\x04time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06params\x18\x03 \x01(\t\x12\x0f\n\x07metrics\x18\x04 \x01(\t\"H\n\x10SimpleExperiment\x12\r\n\x05token\x18\x01 \x01(\t\x12\x11\n\tnamespace\x18\x02 \x01(\t\x12\x12\n\nexperiment\x18\x03 \x01(\t\"3\n\x0fSimpleNamespace\x12\r\n\x05token\x18\x01 \x01(\t\x12\x11\n\tnamespace\x18\x02 \x01(\t\"\x1c\n\x0bSimpleToken\x12\r\n\x05token\x18\x01 \x01(\t\",\n\x0bSimpleReply\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\"R\n\rAddExperiment\x12\r\n\x05token\x18\x01 \x01(\t\x12\x11\n\tnamespace\x18\x02 \x01(\t\x12\x1f\n\nexperiment\x18\x03 \x01(\x0b\x32\x0b.Experiment\"S\n\x10\x45xperimentsReply\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\x12 \n\x0b\x65xperiments\x18\x03 \x03(\x0b\x32\x0b.Experiment\"K\n\x12GrantAccessRequest\x12\r\n\x05token\x18\x01 \x01(\t\x12\x11\n\tnamespace\x18\x02 \x01(\t\x12\x13\n\x0bother_token\x18\x03 \x01(\t\"b\n\x18ReserveExperimentRequest\x12\r\n\x05token\x18\x01 \x01(\t\x12\x11\n\tnamespace\x18\x02 \x01(\t\x12\x12\n\nexperiment\x18\x03 \x01(\t\x12\x10\n\x08\x64uration\x18\x04 \x01(\r2\xf8\x03\n\x11\x45xperimentService\x12\x32\n\x10\x43reateExperiment\x12\x0e.AddExperiment\x1a\x0c.SimpleReply\"\x00\x12>\n\x11ReserveExperiment\x12\x19.ReserveExperimentRequest\x1a\x0c.SimpleReply\"\x00\x12\x35\n\x10\x44\x65leteExperiment\x12\x11.SimpleExperiment\x1a\x0c.SimpleReply\"\x00\x12\x34\n\x0f\x43heckExperiment\x12\x11.SimpleExperiment\x1a\x0c.SimpleReply\"\x00\x12\x37\n\x0eGetExperiments\x12\x10.SimpleNamespace\x1a\x11.ExperimentsReply\"\x00\x12\x33\n\x0f\x43reateNamespace\x12\x10.SimpleNamespace\x1a\x0c.SimpleReply\"\x00\x12\x33\n\x0f\x44\x65leteNamespace\x12\x10.SimpleNamespace\x1a\x0c.SimpleReply\"\x00\x12+\n\x0bRevokeToken\x12\x0c.SimpleToken\x1a\x0c.SimpleReply\"\x00\x12\x32\n\x0bGrantAccess\x12\x13.GrantAccessRequest\x1a\x0c.SimpleReply\"\x00\x42\x1c\n\x1a\x65xperiment_collection_coreb\x06proto3'
+  serialized_pb=b'\n(experiment_collection_core/service.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"e\n\nExperiment\x12\x0c\n\x04name\x18\x01 \x01(\t\x12(\n\x04time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06params\x18\x03 \x01(\t\x12\x0f\n\x07metrics\x18\x04 \x01(\t\"H\n\x10SimpleExperiment\x12\r\n\x05token\x18\x01 \x01(\t\x12\x11\n\tnamespace\x18\x02 \x01(\t\x12\x12\n\nexperiment\x18\x03 \x01(\t\"3\n\x0fSimpleNamespace\x12\r\n\x05token\x18\x01 \x01(\t\x12\x11\n\tnamespace\x18\x02 \x01(\t\"\x1c\n\x0bSimpleToken\x12\r\n\x05token\x18\x01 \x01(\t\",\n\x0bSimpleReply\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\"R\n\rAddExperiment\x12\r\n\x05token\x18\x01 \x01(\t\x12\x11\n\tnamespace\x18\x02 \x01(\t\x12\x1f\n\nexperiment\x18\x03 \x01(\x0b\x32\x0b.Experiment\"S\n\x10\x45xperimentsReply\x12\x0e\n\x06status\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\x12 \n\x0b\x65xperiments\x18\x03 \x03(\x0b\x32\x0b.Experiment\"K\n\x12GrantAccessRequest\x12\r\n\x05token\x18\x01 \x01(\t\x12\x11\n\tnamespace\x18\x02 \x01(\t\x12\x13\n\x0bother_token\x18\x03 \x01(\t\"b\n\x18ReserveExperimentRequest\x12\r\n\x05token\x18\x01 \x01(\t\x12\x11\n\tnamespace\x18\x02 \x01(\t\x12\x12\n\nexperiment\x18\x03 \x01(\t\x12\x10\n\x08\x64uration\x18\x04 \x01(\r2\xc3\x03\n\x11\x45xperimentService\x12\x32\n\x10\x43reateExperiment\x12\x0e.AddExperiment\x1a\x0c.SimpleReply\"\x00\x12>\n\x11ReserveExperiment\x12\x19.ReserveExperimentRequest\x1a\x0c.SimpleReply\"\x00\x12\x35\n\x10\x44\x65leteExperiment\x12\x11.SimpleExperiment\x1a\x0c.SimpleReply\"\x00\x12\x34\n\x0f\x43heckExperiment\x12\x11.SimpleExperiment\x1a\x0c.SimpleReply\"\x00\x12\x37\n\x0eGetExperiments\x12\x10.SimpleNamespace\x1a\x11.ExperimentsReply\"\x00\x12\x33\n\x0f\x43reateNamespace\x12\x10.SimpleNamespace\x1a\x0c.SimpleReply\"\x00\x12+\n\x0bRevokeToken\x12\x0c.SimpleToken\x1a\x0c.SimpleReply\"\x00\x12\x32\n\x0bGrantAccess\x12\x13.GrantAccessRequest\x1a\x0c.SimpleReply\"\x00\x42\x1c\n\x1a\x65xperiment_collection_coreb\x06proto3'
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -514,7 +514,7 @@ _EXPERIMENTSERVICE = _descriptor.ServiceDescriptor(
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
   serialized_start=730,
-  serialized_end=1234,
+  serialized_end=1181,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreateExperiment',
@@ -577,19 +577,9 @@ _EXPERIMENTSERVICE = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
-    name='DeleteNamespace',
-    full_name='ExperimentService.DeleteNamespace',
-    index=6,
-    containing_service=None,
-    input_type=_SIMPLENAMESPACE,
-    output_type=_SIMPLEREPLY,
-    serialized_options=None,
-    create_key=_descriptor._internal_create_key,
-  ),
-  _descriptor.MethodDescriptor(
     name='RevokeToken',
     full_name='ExperimentService.RevokeToken',
-    index=7,
+    index=6,
     containing_service=None,
     input_type=_SIMPLETOKEN,
     output_type=_SIMPLEREPLY,
@@ -599,7 +589,7 @@ _EXPERIMENTSERVICE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='GrantAccess',
     full_name='ExperimentService.GrantAccess',
-    index=8,
+    index=7,
     containing_service=None,
     input_type=_GRANTACCESSREQUEST,
     output_type=_SIMPLEREPLY,

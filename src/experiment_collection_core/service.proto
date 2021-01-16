@@ -11,7 +11,6 @@ service ExperimentService {
   rpc GetExperiments (SimpleNamespace) returns (ExperimentsReply) {}
 
   rpc CreateNamespace (SimpleNamespace) returns (SimpleReply) {}
-  rpc DeleteNamespace (SimpleNamespace) returns (SimpleReply) {}
   rpc RevokeToken (SimpleToken) returns (SimpleReply) {}
   rpc GrantAccess (GrantAccessRequest) returns (SimpleReply) {}
 }

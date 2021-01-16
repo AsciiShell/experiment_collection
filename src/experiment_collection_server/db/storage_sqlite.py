@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS token_collection
 
 
 class StorageSQLite(StorageABC):
+
     def __init__(self, path='main.db'):
         self.conn = sqlite3.connect(path, check_same_thread=False)
         with self.conn:
@@ -49,27 +50,44 @@ WHERE tokens.expires_at IS NULL
   AND token_collection.namespace = ?;"""
         return self.conn.execute(sql, (token, namespace,)).fetchone() is not None
 
+    def _delete_outdated(self):
+        sql = """DELETE
+FROM experiments
+WHERE expires_at < datetime('now'); """
+        with self.conn:
+            self.conn.execute(sql)
+
     def reserve_experiment(self, namespace: str, name: str, duration: int) -> bool:
         if self.check_experiment(namespace, name):
             return False
+        self._delete_outdated()
         sql = """INSERT INTO experiments (namespace, name, created_at, expires_at)
 VALUES (?, ?, datetime('now'), datetime('now', ?));"""
-        with self.conn:
-            self.conn.execute(sql, (namespace, name, '+{} seconds'.format(duration)))
-        return True
+        try:
+            with self.conn:
+                self.conn.execute(sql, (namespace, name, '+{} seconds'.format(duration)))
+            return True
+        except sqlite3.IntegrityError:
+            return False
 
     # pylint: disable=R0913
-    def create_experiment(self, namespace: str, name: str, params: str, metrics: str, time: datetime.datetime):
+    def create_experiment(self, namespace: str, name: str, params: str, metrics: str, time: datetime.datetime) -> bool:
         sql = """INSERT INTO experiments (namespace, name, params, metrics, created_at)
 VALUES (?, ?, ?, ?, ?);"""
-        with self.conn:
-            self.conn.execute(sql, (namespace, name, params, metrics, time,))
+        self._delete_outdated()
+        try:
+            with self.conn:
+                self.conn.execute(sql, (namespace, name, params, metrics, time,))
+            return True
+        except sqlite3.IntegrityError:
+            return False
 
     def delete_experiment(self, namespace: str, name: str):
         sql = """DELETE
 FROM experiments
 WHERE namespace = ?
   AND name = ?;"""
+        self._delete_outdated()
         with self.conn:
             self.conn.execute(sql, (namespace, name,))
 
@@ -77,21 +95,16 @@ WHERE namespace = ?
         sql = """SELECT 1
 FROM experiments
 WHERE namespace = ?
-  AND name = ?
-  AND (expires_at IS NULL OR date(expires_at) < date('now'));"""
+  AND name = ?;"""
+        self._delete_outdated()
         return self.conn.execute(sql, (namespace, name,)).fetchone() is not None
 
     def get_experiments(self, namespace: str) -> typing.List[typing.Dict]:
         sql = """SELECT name, params, metrics, created_at as time
 FROM experiments
-WHERE namespace = ?;"""
+WHERE namespace = ?
+  AND expires_at IS NULL;"""
         return self.conn.execute(sql, (namespace,)).fetchall()
-
-    def create_namespace(self, token: str, namespace: str):
-        return self.grant_permission(token, namespace)
-
-    def delete_namespace(self, namespace: str):
-        raise NotImplementedError()
 
     def revoke_token(self, token: str):
         sql = """UPDATE tokens
@@ -101,8 +114,21 @@ WHERE expires_at IS NULL
         with self.conn:
             self.conn.execute(sql, (token,))
 
-    def grant_permission(self, token: str, namespace: str):
+    def create_token(self, token: str) -> bool:
+        sql = """INSERT INTO main.tokens(token) VALUES (?);"""
+        try:
+            with self.conn:
+                self.conn.execute(sql, (token,))
+            return True
+        except sqlite3.IntegrityError:
+            return False
+
+    def grant_permission(self, token: str, namespace: str) -> bool:
         sql = """INSERT INTO token_collection(token, namespace)
 VALUES ((SELECT id FROM tokens WHERE tokens.token = ?), ?);"""
-        with self.conn:
-            self.conn.execute(sql, (token, namespace))
+        try:
+            with self.conn:
+                self.conn.execute(sql, (token, namespace))
+            return True
+        except sqlite3.IntegrityError:
+            return False

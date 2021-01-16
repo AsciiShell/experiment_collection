@@ -6,10 +6,10 @@ import grpc
 import pandas as pd
 from google.protobuf.timestamp_pb2 import Timestamp
 
+from experiment_collection.utils import postprocess_df
 from experiment_collection_core import service_pb2_grpc, service_pb2
 from .collection_abc import ExperimentCollectionABC
 from .experiment import Experiment
-from .utils import postprocess_df
 
 
 class ExperimentCollectionRemoteException(Exception):
@@ -83,17 +83,13 @@ class ExperimentCollectionRemote(ExperimentCollectionABC):
             return ExperimentCollectionRemote(self.host, name, self.token)
         raise ExperimentCollectionRemoteException(r.error)
 
-    def delete(self):
-        r = self.stub.DeleteNamespace(service_pb2.SimpleNamespace(**self.auth))
-        if not r.status:
-            raise ExperimentCollectionRemoteException(r.error)
-
     def revoke(self, *, force=False):
         if force or input('enter YES to revoke access to all your namespaces') == 'YES':
             r = self.stub.RevokeToken(service_pb2.SimpleToken(token=self.token))
             if not r.status:
                 raise ExperimentCollectionRemoteException(r.error)
-        raise ExperimentCollectionRemoteException('abort')
+        else:
+            raise ExperimentCollectionRemoteException('abort')
 
     def grant(self, token: str):
         r = self.stub.GrantAccess(service_pb2.GrantAccessRequest(other_token=token, **self.auth))

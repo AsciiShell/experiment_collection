@@ -21,3 +21,6 @@ jobs:
       - name: Run linters
         run: |
           make linters
+      - name: Run tests
+        run: |
+          make test

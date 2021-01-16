@@ -44,11 +44,6 @@ class ExperimentServiceStub(object):
                 request_serializer=experiment__collection__core_dot_service__pb2.SimpleNamespace.SerializeToString,
                 response_deserializer=experiment__collection__core_dot_service__pb2.SimpleReply.FromString,
                 )
-        self.DeleteNamespace = channel.unary_unary(
-                '/ExperimentService/DeleteNamespace',
-                request_serializer=experiment__collection__core_dot_service__pb2.SimpleNamespace.SerializeToString,
-                response_deserializer=experiment__collection__core_dot_service__pb2.SimpleReply.FromString,
-                )
         self.RevokeToken = channel.unary_unary(
                 '/ExperimentService/RevokeToken',
                 request_serializer=experiment__collection__core_dot_service__pb2.SimpleToken.SerializeToString,
@@ -100,12 +95,6 @@ class ExperimentServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def DeleteNamespace(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def RevokeToken(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -148,11 +137,6 @@ def add_ExperimentServiceServicer_to_server(servicer, server):
             ),
             'CreateNamespace': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateNamespace,
-                    request_deserializer=experiment__collection__core_dot_service__pb2.SimpleNamespace.FromString,
-                    response_serializer=experiment__collection__core_dot_service__pb2.SimpleReply.SerializeToString,
-            ),
-            'DeleteNamespace': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteNamespace,
                     request_deserializer=experiment__collection__core_dot_service__pb2.SimpleNamespace.FromString,
                     response_serializer=experiment__collection__core_dot_service__pb2.SimpleReply.SerializeToString,
             ),
@@ -273,23 +257,6 @@ class ExperimentService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ExperimentService/CreateNamespace',
-            experiment__collection__core_dot_service__pb2.SimpleNamespace.SerializeToString,
-            experiment__collection__core_dot_service__pb2.SimpleReply.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def DeleteNamespace(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/ExperimentService/DeleteNamespace',
             experiment__collection__core_dot_service__pb2.SimpleNamespace.SerializeToString,
             experiment__collection__core_dot_service__pb2.SimpleReply.FromString,
             options, channel_credentials,

@@ -35,10 +35,6 @@ class ExperimentCollectionABC(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def delete(self):
-        pass
-
-    @abc.abstractmethod
     def revoke(self, *, force=False):
         pass
 

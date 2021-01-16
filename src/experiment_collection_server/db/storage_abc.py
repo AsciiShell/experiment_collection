@@ -22,7 +22,7 @@ class StorageABC(metaclass=abc.ABCMeta):
 
     # pylint: disable=R0913
     @abc.abstractmethod
-    def create_experiment(self, namespace: str, name: str, params: str, metrics: str, time: datetime.datetime):
+    def create_experiment(self, namespace: str, name: str, params: str, metrics: str, time: datetime.datetime) -> bool:
         """add experiment to collection"""
 
     @abc.abstractmethod
@@ -38,17 +38,13 @@ class StorageABC(metaclass=abc.ABCMeta):
         """return all experiments from namespace"""
 
     @abc.abstractmethod
-    def create_namespace(self, token: str, namespace: str):
-        """create namespace with permission for special token"""
-
-    @abc.abstractmethod
-    def delete_namespace(self, namespace: str):
-        """delete empty namespace"""
-
-    @abc.abstractmethod
     def revoke_token(self, token: str):
         """remove all permission for token"""
 
     @abc.abstractmethod
-    def grant_permission(self, token: str, namespace: str):
+    def create_token(self, token: str) -> bool:
+        """create new empty token"""
+
+    @abc.abstractmethod
+    def grant_permission(self, token: str, namespace: str) -> bool:
         """add permission to namespace"""

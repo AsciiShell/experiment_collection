@@ -31,4 +31,7 @@ flake8:
 bandit:
 	 bandit --ini setup.cfg -r src/
 
+test:
+	pytest
+
 linters: pylint flake8 bandit
