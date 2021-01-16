@@ -1,10 +1,10 @@
 import random
 import string
+import time
 from concurrent import futures
 
 import grpc
 import pytest
-import time
 
 import experiment_collection
 from experiment_collection_core import service_pb2_grpc
@@ -13,34 +13,38 @@ from experiment_collection_server.service import Servicer
 
 
 class TestCollection:
-    def setup_class(cls):
-        cls.db = StorageSQLite()
-        servicer = Servicer(cls.db)
-        cls.server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
-        service_pb2_grpc.add_ExperimentServiceServicer_to_server(servicer, cls.server)
-        cls.server.add_insecure_port('[::]:50051')
-        cls.server.start()
+    db = None
+    server = None
+    coll = None
+
+    def setup_class(self):
+        self.db = StorageSQLite()
+        servicer = Servicer(self.db)
+        self.server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+        service_pb2_grpc.add_ExperimentServiceServicer_to_server(servicer, self.server)
+        self.server.add_insecure_port('[::]:50051')
+        self.server.start()
         namespace = 'main_' + ''.join(random.choices(string.ascii_letters, k=4))
         token = ''.join(random.choices(string.ascii_letters, k=16))
-        cls.db.create_token(token)
-        cls.db.grant_permission(token, namespace)
-        cls.coll = experiment_collection.ExperimentCollectionRemote('localhost:50051', namespace, token)
+        self.db.create_token(token)
+        self.db.grant_permission(token, namespace)
+        self.coll = experiment_collection.ExperimentCollectionRemote('localhost:50051', namespace, token)
 
-    def teardown_class(cls):
-        for index, row in cls.coll.get_experiments().iterrows():
+    def teardown_class(self):
+        for _, row in self.coll.get_experiments().iterrows():
             exp = row['name']
-            cls.coll.delete_experiment(exp)
-        cls.coll.revoke(force=True)
-        cls.coll.close()
-        cls.server.stop(False)
-        cls.db.close()
+            self.coll.delete_experiment(exp)
+        self.coll.revoke(force=True)
+        self.coll.close()
+        self.server.stop(False)
+        self.db.close()
 
     def test_reserve(self):
         exp = experiment_collection.Experiment('test_reserve', params={'lr': 0.1}, metrics={'auc': 0.7})
-        assert self.coll.reserve_experiment(exp, 3)
-        assert not self.coll.reserve_experiment(exp, 3)
+        assert self.coll.reserve_experiment(exp, 1)
+        assert not self.coll.reserve_experiment(exp, 1)
         assert self.coll.check_experiment(exp)
-        time.sleep(5)
+        time.sleep(2)
         assert not self.coll.check_experiment(exp)
 
     def test_add(self):

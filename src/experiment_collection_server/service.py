@@ -19,7 +19,7 @@ def catch_exceptions(f):
         start = time.time()
         try:
             result = f(*args, **kwargs)
-        except Exception as e:
+        except Exception:
             logger.exception('%.4fms %s from %s', 1000 * (time.time() - start), f.__name__, args[2].peer())
             return Empty()
         logger.info('%.4fms %s from %s', 1000 * (time.time() - start), f.__name__, args[2].peer())
@@ -36,7 +36,7 @@ class Servicer(service_pb2_grpc.ExperimentServiceServicer):
     def check_permission(self, request, context):
         try:
             return self.db.check_permission(request.token, request.namespace)
-        except Exception as e:
+        except Exception:
             logger.exception('cannot check permission')
             return False
 

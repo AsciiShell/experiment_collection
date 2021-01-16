@@ -5,11 +5,12 @@ from concurrent import futures
 
 import grpc
 from configargparse import ArgumentParser
+# pylint: disable=E0611
 from setproctitle import setproctitle
 
 from experiment_collection_core import service_pb2_grpc
 from experiment_collection_server.db.storage_sqlite import StorageSQLite
-from service import Servicer
+from experiment_collection_server.service import Servicer
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
