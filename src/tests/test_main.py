@@ -1,20 +1,29 @@
 import random
 import string
+from concurrent import futures
 
+import grpc
 import pytest
 import time
 
 import experiment_collection
-from experiment_collection_server.__main__ import serve
+from experiment_collection_core import service_pb2_grpc
+from experiment_collection_server.db.storage_sqlite import StorageSQLite
+from experiment_collection_server.service import Servicer
 
 
 class TestCollection:
     def setup_class(cls):
-        cls.server, cls.servicer = serve(False)
+        cls.db = StorageSQLite()
+        servicer = Servicer(cls.db)
+        cls.server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+        service_pb2_grpc.add_ExperimentServiceServicer_to_server(servicer, cls.server)
+        cls.server.add_insecure_port('[::]:50051')
+        cls.server.start()
         namespace = 'main_' + ''.join(random.choices(string.ascii_letters, k=4))
         token = ''.join(random.choices(string.ascii_letters, k=16))
-        cls.servicer.db.create_token(token)
-        cls.servicer.db.grant_permission(token, namespace)
+        cls.db.create_token(token)
+        cls.db.grant_permission(token, namespace)
         cls.coll = experiment_collection.ExperimentCollectionRemote('localhost:50051', namespace, token)
 
     def teardown_class(cls):
@@ -23,6 +32,8 @@ class TestCollection:
             cls.coll.delete_experiment(exp)
         cls.coll.revoke(force=True)
         cls.coll.close()
+        cls.server.stop(False)
+        cls.db.close()
 
     def test_reserve(self):
         exp = experiment_collection.Experiment('test_reserve', params={'lr': 0.1}, metrics={'auc': 0.7})
