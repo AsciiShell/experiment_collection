@@ -5,7 +5,7 @@ RUN /usr/share/python3/app/bin/pip install -U pip
 COPY requirements_server.txt /mnt/
 RUN /usr/share/python3/app/bin/pip install -Ur /mnt/requirements_server.txt
 
-COPY dist/experiment_collection_server* /mnt/dist/
+COPY dist/experiment_collection_server*.tar.gz /mnt/dist/
 RUN /usr/share/python3/app/bin/pip install /mnt/dist/* && /usr/share/python3/app/bin/pip check
 
 FROM snakepacker/python:3.8 as api

@@ -1,7 +1,9 @@
 .github
 .git
 .idea
-venv
+venv/
+venv_client/
+venv_server/
 build
 *.egg-info
 instance
