@@ -9,6 +9,7 @@ from configargparse import ArgumentParser
 from setproctitle import setproctitle
 
 from experiment_collection_core import service_pb2_grpc
+from experiment_collection_server.db.storage_postgresql import StoragePostgresql
 from experiment_collection_server.db.storage_sqlite import StorageSQLite
 from experiment_collection_server.service import Servicer
 
@@ -22,8 +23,9 @@ parser = ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter
 )
 group = parser.add_argument_group('Storage Options')
-group.add_argument('--storage-type', type=str, help='Storage type (sqlite)')
+group.add_argument('--storage-type', type=str, help='Storage type (sqlite/postgres)')
 group.add_argument('--sqlite-path', type=str, help='sqlite database path')
+group.add_argument('--postgres-dsn', type=str, help='postgres connection string')
 group = parser.add_argument_group('Server Options')
 group.add_argument('--workers', type=int, default=1, help='Number of workers')
 group.add_argument('--port', type=str, help='server port')
@@ -35,6 +37,8 @@ parser.add_argument('--action', type=str, help='Type of task (run/token)')
 def _get_storage(args):
     if args.storage_type == 'sqlite':
         return StorageSQLite(args.sqlite_path)
+    if args.storage_type == 'postgres':
+        return StoragePostgresql(args.postgres_dsn)
     raise Exception('Unknown storage type "{}"'.format(args.storage_type))
 
 

@@ -24,29 +24,24 @@ or [pypi](https://pypi.org/project/experiment-collection/).
 `ExperimentCollectionRemote` - remote experiment storage;
 could combine data from multiply sources.
 
-```python
-from experiment_collection.experiments import Experiment, ExperimentCollectionLocal, ExperimentCollectionRemote
+```python3
+from experiment_collection import Experiment, ExperimentCollectionRemote
 
-exps1 = ExperimentCollectionLocal('exp_test.db')
-exps2 = ExperimentCollectionRemote('http://127.0.0.1/', 'exp_test')
+exps = ExperimentCollectionRemote('localhost:50051', 'main', 'token')
 
 for i in range(10):
     exp = Experiment('name_{}'.format(i))
     exp.set_metrics({'lr': 0.1})
     exp.set_params({'auc': 0.5})
 
-    exps1.add_experiment(exp)
-    exps2.add_experiment(exp)
+    exps.add_experiment(exp)
 
-    assert exps1.check_experiment(exp)
-    assert exps2.check_experiment(exp)
+    assert exps.check_experiment(exp)
 
 # Delete latest experiment
-exps1.delete_experiment(exp)
-exps2.delete_experiment(exp)
+exps.delete_experiment(exp)
 
-assert not exps1.check_experiment(exp)
-assert not exps2.check_experiment(exp)
+assert not exps.check_experiment(exp)
 ```
 
 View all results.
@@ -54,7 +49,7 @@ All metrics and params auto flatten into single columns.
 
 <div class="cell code">
 
-    exps1.get_experiments()
+    exps.get_experiments()
 
 <div class="output execute_result">
 
