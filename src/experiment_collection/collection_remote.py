@@ -17,8 +17,13 @@ class ExperimentCollectionRemoteException(Exception):
 
 
 class ExperimentCollectionRemote(ExperimentCollectionABC):
-    def __init__(self, host: str, namespace: str, token: str):
-        self.channel = grpc.insecure_channel(host)
+    def __init__(self, host: str, namespace: str, token: str, credentials=None):
+        if credentials is None:
+            self.channel = grpc.insecure_channel(host)
+        else:
+            if isinstance(credentials, bool) and credentials:
+                credentials = grpc.ssl_channel_credentials()
+            self.channel = grpc.secure_channel(host, credentials)
         self.stub = service_pb2_grpc.ExperimentServiceStub(self.channel)
         self.host = host
         self.namespace = namespace

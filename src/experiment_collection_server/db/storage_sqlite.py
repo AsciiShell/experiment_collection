@@ -115,7 +115,7 @@ WHERE expires_at IS NULL
             self.conn.execute(sql, (token,))
 
     def create_token(self, token: str) -> bool:
-        sql = """INSERT INTO main.tokens(token) VALUES (?);"""
+        sql = """INSERT INTO tokens(token) VALUES (?);"""
         try:
             with self.conn:
                 self.conn.execute(sql, (token,))

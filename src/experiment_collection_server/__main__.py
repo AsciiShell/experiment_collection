@@ -51,7 +51,10 @@ def main_server(args):
 
 def main_token(args):
     storage = _get_storage(args)
-    storage.create_token(args.token)
+    if storage.create_token(args.token):
+        logger.info('Token created')
+    else:
+        logger.error('Cannot add token')
 
 
 def main():
@@ -62,7 +65,7 @@ def main():
     if args.action == 'run':
         main_server(args)
     elif args.action == 'token':
-        pass
+        main_token(args)
     else:
         print(parser.format_help())
 
