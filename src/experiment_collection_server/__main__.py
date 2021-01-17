@@ -37,7 +37,7 @@ parser.add_argument('--action', type=str, help='Type of task (run/token)')
 def _get_storage(args):
     if args.storage_type == 'sqlite':
         return StorageSQLite(args.sqlite_path)
-    elif args.storage_type == 'postgres':
+    if args.storage_type == 'postgres':
         return StoragePostgresql(args.postgres_dsn)
     raise Exception('Unknown storage type "{}"'.format(args.storage_type))
 

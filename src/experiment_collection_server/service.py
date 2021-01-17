@@ -77,13 +77,13 @@ class Servicer(service_pb2_grpc.ExperimentServiceServicer):
         if not self.check_permission(request, context):
             return service_pb2.SimpleReply(status=False, error='access denied')
         resp = service_pb2.ExperimentsReply(status=True)
-        for name, params, metrics, time in self.db.get_experiments(request.namespace):
-            ts = Timestamp()
+        for name, params, metrics, ts in self.db.get_experiments(request.namespace):
+            tspb = Timestamp()
             # pylint: disable=E1101
-            ts.FromDatetime(time)
+            tspb.FromDatetime(ts)
             # pylint: disable=E1101
             resp.experiments.append(
-                service_pb2.Experiment(name=name, time=ts, params=params, metrics=metrics))
+                service_pb2.Experiment(name=name, time=tspb, params=params, metrics=metrics))
         return resp
 
     @catch_exceptions
