@@ -104,7 +104,8 @@ WHERE namespace = ?
 FROM experiments
 WHERE namespace = ?
   AND expires_at IS NULL;"""
-        return self.conn.execute(sql, (namespace,)).fetchall()
+        for name, params, metrics, ts in self.conn.execute(sql, (namespace,)):
+            yield name, params, metrics, datetime.datetime.strptime(ts, '%Y-%m-%d %H:%M:%S.%f')
 
     def revoke_token(self, token: str):
         sql = """UPDATE tokens
