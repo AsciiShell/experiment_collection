@@ -10,8 +10,6 @@ def call(*args, shell=False):
         print('Error: ', *args)
 
 
-print('use setup_client.py or setup_server.py', file=sys.stderr)
-
 setup_dir = os.path.dirname(os.path.abspath(__file__))
 setup_client = os.path.join(setup_dir, 'setup_client.py')
 setup_server = os.path.join(setup_dir, 'setup_server.py')
