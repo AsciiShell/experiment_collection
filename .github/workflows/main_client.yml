@@ -1,4 +1,4 @@
-name: Release
+name: Release client
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install setuptools wheel
-          python setup.py sdist bdist_wheel
+          python setup_client.py sdist bdist_wheel
       - name: Build and publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -28,14 +28,5 @@ jobs:
         uses: pypa/gh-action-pypi-publish@master
         with:
           user: __token__
-          password: ${{ secrets.pypi_password }}
+          password: ${{ secrets.pypi_password_client }}
           skip_existing: true
-      - name: Push to Docker Hub
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: asciishell/experiment_collection
-          push: ${{ github.event_name != 'pull_request' }}
-          tag_with_ref: true
-          tag_with_sha: true

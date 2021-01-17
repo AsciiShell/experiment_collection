@@ -15,6 +15,10 @@ class ExperimentCollectionABC(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
+    def reserve_experiment(self, exp: typing.Union[Experiment, str], duration: int) -> bool:
+        pass
+
+    @abc.abstractmethod
     def delete_experiment(self, exp: typing.Union[Experiment, str]):
         pass
 
@@ -24,4 +28,16 @@ class ExperimentCollectionABC(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def get_experiments(self, normalize=True):
+        pass
+
+    @abc.abstractmethod
+    def create_namespace(self, name: str):
+        pass
+
+    @abc.abstractmethod
+    def revoke(self, *, force=False):
+        pass
+
+    @abc.abstractmethod
+    def grant(self, token: str):
         pass

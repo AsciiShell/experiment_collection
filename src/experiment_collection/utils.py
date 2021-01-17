@@ -23,7 +23,6 @@ def normalize_col(source: pd.DataFrame, name: str) -> pd.DataFrame:
 
 
 def postprocess_df(df: pd.DataFrame, normalize: bool) -> pd.DataFrame:
-    df['time'] = pd.to_datetime(df['time'])
     if normalize:
         df = pd.concat([
             df,
