@@ -16,7 +16,7 @@ def load_description(filename: str = 'README.md'):
         return f.read()
 
 
-__version__ = '0.2.0'
+__version__ = '0.2.2'
 NAME_SERVER = 'experiment_collection_server'
 
 setup(
