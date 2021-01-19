@@ -47,6 +47,14 @@ class TestCollection:
         time.sleep(2)
         assert not self.coll.check_experiment(exp)
 
+    def test_reserve_add(self):
+        exp = experiment_collection.Experiment('test_reserve_add', params={'lr': 0.1}, metrics={'auc': 0.7})
+        assert self.coll.reserve_experiment(exp, 100)
+        self.coll.add_experiment(exp)
+        with pytest.raises(experiment_collection.collection_remote.ExperimentCollectionRemoteException):
+            self.coll.add_experiment(exp)
+        assert self.coll.check_experiment(exp)
+
     def test_add(self):
         exp = experiment_collection.Experiment('test_add', params={'lr': 0.1}, metrics={'auc': 0.7})
         assert not self.coll.check_experiment(exp)
