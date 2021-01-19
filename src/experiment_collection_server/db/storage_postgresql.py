@@ -77,8 +77,8 @@ VALUES (%s, %s, now(), now() + interval %s);"""
         sql1 = """DELETE
 FROM experiments
 WHERE expires_at IS NOT NULL
-  AND namespace = ?
-  AND name = ?"""
+  AND namespace = %s
+  AND name = %s"""
         sql2 = """INSERT INTO experiments (namespace, name, params, metrics, created_at)
 VALUES (%s, %s, %s, %s, %s);"""
         self._delete_outdated()
