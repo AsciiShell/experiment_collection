@@ -72,12 +72,18 @@ VALUES (?, ?, datetime('now'), datetime('now', ?));"""
 
     # pylint: disable=R0913
     def create_experiment(self, namespace: str, name: str, params: str, metrics: str, time: datetime.datetime) -> bool:
-        sql = """INSERT INTO experiments (namespace, name, params, metrics, created_at)
+        sql1 = """DELETE
+FROM experiments
+WHERE expires_at IS NOT NULL
+  AND namespace = ?
+  AND name = ?"""
+        sql2 = """INSERT INTO experiments (namespace, name, params, metrics, created_at)
 VALUES (?, ?, ?, ?, ?);"""
         self._delete_outdated()
         try:
             with self.conn:
-                self.conn.execute(sql, (namespace, name, params, metrics, time,))
+                self.conn.execute(sql1, (namespace, name,))
+                self.conn.execute(sql2, (namespace, name, params, metrics, time,))
             return True
         except sqlite3.IntegrityError:
             return False
