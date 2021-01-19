@@ -18,6 +18,10 @@ class ExperimentCollectionRemoteException(Exception):
 
 class ExperimentCollectionRemote(ExperimentCollectionABC):
     def __init__(self, host: str, namespace: str, token: str, credentials=None):
+        self._credentials = credentials
+        self._host = host
+        self._namespace = namespace
+        self._token = token
         if credentials is None:
             self.channel = grpc.insecure_channel(host)
         else:
@@ -25,10 +29,7 @@ class ExperimentCollectionRemote(ExperimentCollectionABC):
                 credentials = grpc.ssl_channel_credentials()
             self.channel = grpc.secure_channel(host, credentials)
         self.stub = service_pb2_grpc.ExperimentServiceStub(self.channel)
-        self.host = host
-        self.namespace = namespace
-        self.token = token
-        self.auth = {'namespace': self.namespace, 'token': self.token}
+        self.auth = {'namespace': self._namespace, 'token': self._token}
 
     def close(self):
         self.channel.close()
@@ -83,14 +84,14 @@ class ExperimentCollectionRemote(ExperimentCollectionABC):
         return df
 
     def create_namespace(self, name: str):
-        r = self.stub.CreateNamespace(service_pb2.SimpleNamespace(namespace=name, token=self.token))
+        r = self.stub.CreateNamespace(service_pb2.SimpleNamespace(namespace=name, token=self._token))
         if r.status:
-            return ExperimentCollectionRemote(self.host, name, self.token)
+            return ExperimentCollectionRemote(self._host, name, self._token, self._credentials)
         raise ExperimentCollectionRemoteException(r.error)
 
     def revoke(self, *, force=False):
         if force or input('enter YES to revoke access to all your namespaces') == 'YES':
-            r = self.stub.RevokeToken(service_pb2.SimpleToken(token=self.token))
+            r = self.stub.RevokeToken(service_pb2.SimpleToken(token=self._token))
             if not r.status:
                 raise ExperimentCollectionRemoteException(r.error)
         else:
